@@ -1,0 +1,25 @@
+{
+  "title": "Treasure Hunt",
+  "finishMessage": "You made it! The hunt is over.",
+  "stages": [
+    {
+      "clue": "Your favourite drink",
+      "searchTerm": "supermarket",
+      "barcodes": ["5449000000996", "5449000131805"],
+      "location": { "name": "Placeholder location one", "lat": 51.5033, "lng": -0.1195 }
+    },
+    {
+      "clue": "Something sweet to share",
+      "searchTerm": "sweet shop",
+      "barcodes": ["7622210449283"],
+      "unlockAt": "2026-11-12T12:00:00",
+      "location": { "name": "Placeholder location two", "lat": 51.5081, "lng": -0.0759 }
+    },
+    {
+      "clue": "A snack for the road",
+      "searchTerm": "petrol station",
+      "barcodes": ["5000328657950"],
+      "location": { "name": "Placeholder final location", "lat": 51.4769, "lng": -0.0005 }
+    }
+  ]
+}
