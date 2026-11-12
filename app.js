@@ -265,7 +265,7 @@
       clock.textContent = L.formatCountdown(ms);
     }
     show([
-      el("div", { class: "card" }, [
+      el("div", { class: "card center" }, [
         el("p", { class: "eyebrow", text: "Locked" }),
         el("p", { class: "big", text: "The next clue unlocks in" }),
         clock,
