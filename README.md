@@ -1,7 +1,8 @@
 # [treasurehunt.ismailmo.com](https://treasurehunt.ismailmo.com)
 
-A mobile treasure hunt with no backend. Each stage shows a clue, the player scans the
-barcode of the right item, and a correct scan reveals the coordinates of the next location.
+A mobile treasure hunt with no backend. The hunt is a list of places. At each place the player gets a
+clue, scans the barcode of the right item, and a correct scan reveals the next place. The player starts
+at the first place, so it is never announced, and the hunt ends when the last place is reached.
 
 ## Editing the hunt
 
@@ -10,34 +11,59 @@ Everything lives in [`stages.json`](./stages.json):
 ```json
 {
   "title": "Treasure Hunt",
+  "welcome": "Follow the clues and find the treasure.",
   "finishMessage": "You made it!",
   "stages": [
     {
       "clue": "Your favourite drink",
-      "searchTerm": "supermarket",
+      "detail": "Any size will do.",
       "barcodes": ["5449000000996"],
       "unlockAt": "2026-12-01T14:00:00",
+      "location": { "name": "Home", "current": true }
+    },
+    {
       "location": { "name": "The old bandstand", "lat": 51.5033, "lng": -0.1195 }
     }
   ]
 }
 ```
 
+That is a two-place hunt: scan a drink at home, which reveals the bandstand. The last entry is only
+where the hunt ends, so it needs a `location` and nothing else. Every entry before it also needs:
+
 | Field | Required | Notes |
 |---|---|---|
-| `clue` | yes | The prompt shown to the player. |
-| `searchTerm` | no | Adds a "Find … nearby" button that searches Google Maps. |
-| `barcodes` | yes | Every barcode that counts as correct, as text in quotes. List each size/pack variant. |
+| `clue` | yes, except on the last entry | The prompt shown to the player at this place. |
+| `detail` | no | Extra hint shown under the clue on the clue page (hidden on the scan page). |
+| `barcodes` | yes, except on the last entry | What has to be scanned at this place. Every barcode that counts as correct, as text in quotes. List each size/pack variant. An entry can also be `{ "code": "…", "note": "Coke 500ml" }`; the note is only a reminder for you. |
 | `unlockAt` | no | The clue stays locked, with a countdown, until this date-time (phone's local time). |
-| `location` | yes | Revealed after a correct scan: `name`, `lat`, `lng`. |
+| `location` | yes | Where this place is: `name`, `lat`, `lng`, and an optional `radius` in metres. It's revealed after the *previous* place's scan. For somewhere the player already is, or that you'd rather not publish (like home), use `{ "name": "Home", "current": true }` instead: no coordinates, and the reveal screen before this place is skipped (except for the last entry, which is always revealed). |
+
+At least two entries are needed: where the hunt starts and where it ends. After the scan at the
+second-to-last place the final location is revealed; once the player gets there and taps **Finish**,
+the `finishMessage` is shown.
+
+### Arrival check
+
+On the reveal screen, **Next clue** (**Finish** for the last place) stays greyed out until the phone is
+within 3 km of the revealed location. Change the default with a top-level `"arrivalRadius"` (metres), or
+override it for one stage with `"radius"` inside that stage's `location`. The check asks for a rough
+location only (cheaper on battery, works indoors), and a weak fix gets up to 100 m of slack.
+
+The check never traps a player: if location access is refused, or the page isn't on `https://`
+(or `localhost`), they're let through. If no GPS fix arrives within 30 seconds, a
+"Carry on anyway" button appears. If the top-level `"overridePassword"` is set, tapping it asks for that
+password first (leave it out to let anyone through). The password sits in `stages.json`, so anyone who
+opens that file can read it; it stops accidental skips, not a determined player.
 
 Mistakes in the file show up as a readable error on the page.
 
 ## Test helpers
 
 - `?setup` – scan any item to see its barcode number (for filling in `barcodes`).
-- `?stage=2` – jump to a stage.
-- `?reset` – clear saved progress.
+- `?stage=2` – jump to the clue at the 2nd place (the last number shows the finish message).
+- `?reset` – clear saved progress (use it after changing how stages are laid out).
+- `?nogeo` – turn the arrival check off (for testing away from the locations).
 
 ## Running locally
 

@@ -8,11 +8,16 @@
   var titleEl = document.getElementById("title");
 
   var config = null;
-  var state = { stage: 0, phase: "clue" }; // phase: "clue" | "revealed"
+  // phase: "welcome" (stage 0 only) | "clue" | "revealed" (stage scanned; the next stage's location is shown)
+  var state = { stage: 0, phase: "welcome" };
   var countdownTimer = null;
   var scanner = null;
   var scannerRunning = false;
   var audioCtx = null;
+  var geoWatchId = null;
+  var geoSlowTimer = null;
+  var DEFAULT_RADIUS = 3000; // metres, used when neither the location nor the config sets one
+  var skipGeo = new URLSearchParams(location.search).has("nogeo"); // test helper: turns the check off
 
   // ---------- small DOM helpers ----------
 
@@ -28,9 +33,17 @@
     return node;
   }
 
+  function stopGeo() {
+    if (geoWatchId !== null && navigator.geolocation) navigator.geolocation.clearWatch(geoWatchId);
+    geoWatchId = null;
+    clearTimeout(geoSlowTimer);
+    geoSlowTimer = null;
+  }
+
   function show(nodes) {
     clearInterval(countdownTimer);
     countdownTimer = null;
+    stopGeo();
     screen.replaceChildren.apply(screen, nodes.filter(Boolean));
     window.scrollTo(0, 0);
   }
@@ -48,7 +61,7 @@
     try {
       var saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
       if (saved && Number.isInteger(saved.stage) && saved.stage >= 0 &&
-          (saved.phase === "clue" || saved.phase === "revealed")) {
+        (saved.phase === "welcome" || saved.phase === "clue" || saved.phase === "revealed")) {
         state = { stage: saved.stage, phase: saved.phase };
       }
     } catch (e) { /* no saved progress, or storage unavailable */ }
@@ -184,7 +197,7 @@
         function () { /* no barcode in this frame */ }
       ).then(function () {
         if (scanner !== mine) { // user left the screen while the camera was starting
-          mine.stop().then(function () { mine.clear(); }).catch(function () {});
+          mine.stop().then(function () { mine.clear(); }).catch(function () { });
           return;
         }
         scannerRunning = true;
@@ -204,21 +217,44 @@
   // ---------- screens ----------
 
   function renderHeader() {
-    titleEl.textContent = config.title || "Treasure Hunt";
-    document.title = config.title || "Treasure Hunt";
-    var n = config.stages.length;
-    progressEl.textContent = state.stage < n ? "Stage " + (state.stage + 1) + " of " + n : "Complete";
+    titleEl.textContent = config.title || "Saj's Treasure Hunt";
+    document.title = config.title || "Saj's Treasure Hunt";
+    var total = config.stages.length - 1; // the last entry is the final location, not a stage to play
+    if (state.phase === "welcome") progressEl.textContent = "";
+    else progressEl.textContent = state.stage < total ? "Stage " + (state.stage + 1) + " of " + total : "Complete";
   }
 
   function render() {
     stopScanner();
     renderHeader();
     var n = config.stages.length;
-    if (state.stage >= n) return renderFinish();
+    // The last entry is the final location (nothing to scan there), so reaching it ends the hunt.
+    if (state.stage >= n - 1 && state.phase !== "revealed") return renderFinish();
+    if (state.stage === 0 && state.phase === "welcome") return renderWelcome();
     var stage = config.stages[state.stage];
-    if (state.phase === "revealed") return renderRevealed(stage);
+    if (state.phase === "revealed") {
+      // "revealed" means this stage was scanned and the next stage's location is on show.
+      if (L.afterScan(config.stages, state.stage) !== "reveal") return go(state.stage + 1, "clue");
+      return renderRevealed(config.stages[state.stage + 1]);
+    }
     if (L.msUntilUnlock(stage, Date.now()) > 0) return renderLocked(stage);
     renderClue(stage);
+  }
+
+  function renderWelcome() {
+    show([
+      el("div", { class: "card center" }, [
+        el("p", { class: "eyebrow", text: "Welcome" }),
+        el("p", { class: "big", text: config.title || "Saj's Treasure Hunt" }),
+        el("p", {
+          class: "muted",
+          text: config.welcome || "Follow the clues, scan the right items, and find your way to the treasure."
+        })
+      ]),
+      el("div", { class: "stack" }, [
+        el("button", { class: "primary", text: "Start the treasure hunt", onclick: function () { go(0, "clue"); } })
+      ])
+    ]);
   }
 
   function renderLocked(stage) {
@@ -242,13 +278,15 @@
 
   function renderClue(stage) {
     show([
-      el("div", { class: "card" }, [
+      el("div", { class: "card center" }, [
         el("p", { class: "eyebrow", text: "Find and scan" }),
         el("p", { class: "big", text: stage.clue }),
-        el("p", { class: "muted", text: "Find the item, then scan its barcode to reveal where to go next." })
+        el("p", {
+          class: "muted",
+          text: stage.detail || "Find the item, then scan its barcode to reveal where to go next."
+        })
       ]),
       el("div", { class: "stack" }, [
-        stage.searchTerm ? link("Find " + stage.searchTerm + " nearby", L.mapsSearchUrl(stage.searchTerm), false) : null,
         el("button", { class: "primary", text: "Scan the item", onclick: function () { renderScan(stage); } })
       ])
     ]);
@@ -259,7 +297,10 @@
     var view = scanView(function (code) {
       if (!L.barcodeMatches(code, stage.barcodes)) return false;
       setTimeout(function () {
-        stopScanner().then(function () { go(index, "revealed"); });
+        stopScanner().then(function () {
+          if (L.afterScan(config.stages, index) === "reveal") go(index, "revealed");
+          else go(index + 1, "clue"); // nothing to reveal: next clue, or the finish screen after the last stage
+        });
       }, 1100); // leave the green tick on screen for a moment
       return true;
     }, {});
@@ -305,39 +346,113 @@
     }
   }
 
+  // Keeps `next` disabled until the phone is within `radius` metres of `loc`. If the check
+  // can't run (no GPS API, insecure page, permission refused) the player is let through
+  // rather than getting stuck.
+  function watchArrival(loc, radius, next, status, skip) {
+    function allow(message) {
+      stopGeo();
+      skip.hidden = true;
+      status.textContent = message;
+      next.disabled = false;
+    }
+    if (skipGeo) return allow("Location check is off.");
+    if (!navigator.geolocation || !window.isSecureContext) {
+      return allow("Can't check your location on this connection, so you can carry on.");
+    }
+    next.disabled = true;
+    status.textContent = "Finding your location…";
+    // With no fix at all after a while, offer a way past so a bad GPS signal can't end the hunt.
+    geoSlowTimer = setTimeout(function () { skip.hidden = false; }, 30000);
+    geoWatchId = navigator.geolocation.watchPosition(function (pos) {
+      clearTimeout(geoSlowTimer);
+      skip.hidden = true;
+      var d = L.distanceMetres({ lat: pos.coords.latitude, lng: pos.coords.longitude }, loc);
+      if (L.withinRadius(d, pos.coords.accuracy, radius)) return allow("You've arrived ✓");
+      status.textContent = "You're " + L.formatDistance(d) + " away. Get within " + L.formatDistance(radius) + " to continue.";
+    }, function (err) {
+      if (err.code === 1) allow("Location access is off, so you can carry on without the check.");
+      // Other errors (no signal yet, timeouts) are retried by the watch.
+    }, { enableHighAccuracy: false, maximumAge: 30000, timeout: 20000 }); // a rough fix is enough
+  }
+
+  // Shows where the next stage is (`stage` is that next stage, not the one just scanned).
   function renderRevealed(stage) {
-    var isLast = state.stage === config.stages.length - 1;
+    var isFinal = state.stage + 1 === config.stages.length - 1; // `stage` is the final location
     var coords = L.formatCoords(stage.location);
+    var radius = stage.location.radius || config.arrivalRadius || DEFAULT_RADIUS;
+    var status = el("p", { class: "status" });
+    var next = el("button", {
+      class: "primary",
+      text: isFinal ? "Finish" : "Next clue",
+      onclick: function () { go(state.stage + 1, "clue"); }
+    });
+    // Escape hatch for a dead GPS signal. If the config sets "overridePassword", it has to be typed first.
+    function carryOn() { go(state.stage + 1, "clue"); }
+    var passInput = el("input", {
+      type: "password", autocomplete: "off", placeholder: "Password", "aria-label": "Password"
+    });
+    var passError = el("p", { class: "status bad" });
+    var passForm = el("form", { class: "manual", hidden: "" }, [
+      passInput, el("button", { type: "submit", text: "Continue" })
+    ]);
+    passForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (passInput.value === config.overridePassword) return carryOn();
+      passError.textContent = "That's not the password.";
+      passInput.select();
+    });
+    var skipButton = el("button", {
+      text: "Can't get a location? Carry on anyway",
+      onclick: function () {
+        if (!config.overridePassword) return carryOn();
+        skipButton.hidden = true;
+        passForm.hidden = false;
+        passInput.focus();
+      }
+    });
+    var skip = el("div", { class: "stack", hidden: "" }, [skipButton, passForm, passError]); // shown by watchArrival
     show([
-      el("div", { class: "card" }, [
-        el("p", { class: "eyebrow", text: isLast ? "Final location" : "Next location" }),
+      el("div", { class: "card center" }, [
+        el("p", { class: "eyebrow", text: isFinal ? "Final location" : "To unlock the next clue, go to:" }),
         el("p", { class: "big", text: stage.location.name }),
         el("p", { class: "coords", text: coords })
       ]),
       el("div", { class: "stack" }, [
         copyButton(coords, "Copy coordinates"),
         link("Navigate in Google Maps", L.mapsDirectionsUrl(stage.location), false),
-        el("button", {
-          class: "primary",
-          text: isLast ? "Finish" : "Next clue",
-          onclick: function () { go(state.stage + 1, "clue"); }
-        })
+        status,
+        next,
+        skip
       ])
     ]);
+    watchArrival(stage.location, radius, next, status, skip);
+  }
+
+  // Brown balloons drifting up the screen. Purely decorative, and hidden for reduced-motion users in CSS.
+  function balloons(count) {
+    var layer = el("div", { class: "balloons", "aria-hidden": "true" });
+    for (var i = 0; i < count; i++) {
+      var size = 44 + Math.round(Math.random() * 32);
+      var dur = 8 + Math.random() * 6;
+      var style = "--x:" + (4 + Math.round(Math.random() * 88)) + "%;" +
+        "--size:" + size + "px;" +
+        "--dur:" + dur.toFixed(1) + "s;" +
+        "--delay:-" + (Math.random() * dur).toFixed(1) + "s;" + // negative: already part-way up when the screen opens
+        "--sway:" + (2.2 + Math.random() * 1.8).toFixed(1) + "s";
+      layer.appendChild(el("div", { class: "balloon", style: style }, [el("div", { class: "balloon-body" })]));
+    }
+    return layer;
   }
 
   function renderFinish() {
-    var last = config.stages[config.stages.length - 1];
+    // Shown once the player has reached the final location.
     show([
-      el("div", { class: "card" }, [
+      el("div", { class: "card center" }, [
         el("p", { class: "eyebrow", text: "Hunt complete" }),
-        el("p", { class: "big", text: config.finishMessage || "You made it!" }),
-        el("p", { class: "muted", text: last.location.name }),
-        el("p", { class: "coords", text: L.formatCoords(last.location) })
+        el("p", { class: "big", text: config.finishMessage || "You made it!" })
       ]),
-      el("div", { class: "stack" }, [
-        link("Navigate in Google Maps", L.mapsDirectionsUrl(last.location), false)
-      ])
+      balloons(14)
     ]);
   }
 
@@ -381,7 +496,7 @@
   function applyQueryParams() {
     var params = new URLSearchParams(location.search);
     if (params.has("reset")) {
-      state = { stage: 0, phase: "clue" };
+      state = { stage: 0, phase: "welcome" };
       saveState();
     }
     if (params.has("stage")) {

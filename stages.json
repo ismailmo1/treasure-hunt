@@ -1,25 +1,169 @@
 {
-  "title": "Treasure Hunt",
-  "finishMessage": "You made it! The hunt is over.",
+  "title": "Saj's Treasure Hunt",
+  "welcome": "Follow the clues, scan the right items, and find your way to the treasure.",
+  "finishMessage": "Congratulations, you made it! The hunt is over.",
+  "overridePassword": "changeme",
   "stages": [
     {
-      "clue": "Your favourite drink",
-      "searchTerm": "supermarket",
-      "barcodes": ["5449000000996", "5449000131805"],
-      "location": { "name": "Placeholder location one", "lat": 51.5033, "lng": -0.1195 }
+      "clue": "some snacks for movie night",
+      "detail": "grab some snacks and scan what you think is my favourite",
+      "barcodes": [
+        "1111"
+      ],
+      "unlockAt": "2026-11-13T16:00:00",
+      "location": {
+        "name": "Home",
+        "current": true
+      }
     },
     {
-      "clue": "Something sweet to share",
-      "searchTerm": "sweet shop",
-      "barcodes": ["7622210449283"],
-      "unlockAt": "2026-11-12T12:00:00",
-      "location": { "name": "Placeholder location two", "lat": 51.5081, "lng": -0.0759 }
+      "clue": "TODO: clue for stage 2",
+      "detail": "TODO: extra detail for stage 2",
+      "barcodes": [
+        "1111"
+      ],
+      "unlockAt": "2026-11-13T21:00:00",
+      "location": {
+        "name": "Home",
+        "current": true
+      }
     },
     {
-      "clue": "A snack for the road",
-      "searchTerm": "petrol station",
-      "barcodes": ["5000328657950"],
-      "location": { "name": "Placeholder final location", "lat": 51.4769, "lng": -0.0005 }
+      "clue": "something to keep me awake!",
+      "detail": "my favourite way to power through a long drive, especially when i've refused to sleep the night before (im watching my figure btw)",
+      "barcodes": [
+        {
+          "code": "5060896623276",
+          "note": "Monster Energy Ultra (probably the white can)"
+        },
+        {
+          "code": "5060896623368",
+          "note": "Monster Energy 500ml"
+        },
+        {
+          "code": "5060947545724",
+          "note": "Monster Ultra Zero Sugar 500ml"
+        },
+        {
+          "code": "5060639122899",
+          "note": "Monster Pacific Punch 500ml"
+        },
+        {
+          "code": "5060896623214",
+          "note": "Monster Mango Loco 500ml"
+        },
+        {
+          "code": "5060896623894",
+          "note": "Monster Ultra Gold 500ml"
+        },
+        {
+          "code": "5060947549074",
+          "note": "Monster Zero Sugar (green)"
+        },
+        {
+          "code": "5060751213383",
+          "note": "Monster Monarch 500ml"
+        }
+      ],
+      "unlockAt": "2026-01-01T00:00:00",
+      "location": {
+        "name": "Coventry Arena",
+        "lat": 52.44768,
+        "lng": -1.48472
+      }
+    },
+    {
+      "clue": "TODO: clue for stage 4",
+      "detail": "TODO: extra detail for stage 4",
+      "barcodes": [
+        {
+          "code": "5000159559485",
+          "note": "Twix 50g"
+        },
+        {
+          "code": "5000159459228",
+          "note": "Twix Twin 50g"
+        },
+        {
+          "code": "5000159557733",
+          "note": "Twix 160g multipack"
+        },
+        {
+          "code": "5000159557658",
+          "note": "Twix 4 pcs"
+        }
+      ],
+      "unlockAt": "2026-01-01T00:00:00",
+      "location": {
+        "name": "Malt Kiln Farm Shop",
+        "lat": 52.43265,
+        "lng": -1.32678
+      }
+    },
+    {
+      "clue": "TODO: clue for stage 5",
+      "detail": "TODO: extra detail for stage 5",
+      "barcodes": [
+        {
+          "code": "5000208099351",
+          "note": "Tetley Original 120 tea bags"
+        },
+        {
+          "code": "5000208069897",
+          "note": "Tetley Original 240 tea bags"
+        },
+        {
+          "code": "5000208096480",
+          "note": "Tetley Original 375g"
+        },
+        {
+          "code": "5000208044450",
+          "note": "Tetley tea bags (generic entry)"
+        },
+        {
+          "code": "5000208002450",
+          "note": "Tetley Decaf 80 tea bags"
+        }
+      ],
+      "unlockAt": "2026-01-01T00:00:00",
+      "location": {
+        "name": "Pausa Cafe, Rugby",
+        "lat": 52.38886,
+        "lng": -1.2648
+      }
+    },
+    {
+      "clue": "TODO: clue for stage 6",
+      "detail": "TODO: extra detail for stage 6",
+      "barcodes": [
+        "1111"
+      ],
+      "unlockAt": "2026-01-01T00:00:00",
+      "location": {
+        "name": "Triangular Lodge, Rushton",
+        "lat": 52.44068,
+        "lng": -0.77664
+      }
+    },
+    {
+      "clue": "TODO: clue for stage 7",
+      "detail": "TODO: extra detail for stage 7",
+      "barcodes": [
+        "1111"
+      ],
+      "unlockAt": "2026-01-01T00:00:00",
+      "location": {
+        "name": "Wendy's, Brampton",
+        "lat": 52.33225,
+        "lng": -0.25828
+      }
+    },
+    {
+      "location": {
+        "name": "Novotel Hotel, Cambridge",
+        "lat": 52.2250,
+        "lng": 0.1585
+      }
     }
   ]
 }
