@@ -185,7 +185,9 @@
 
     #reader video {
       display: block;
-      width: 100% !important;
+      width: 100%;
+      min-height: 15rem;
+      max-height: 60vh;
       object-fit: cover;
     }
 
@@ -396,7 +398,7 @@
     </header>
     <main id="screen" aria-live="polite"></main>
   </div>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/barcode-detector@3.2.3/dist/iife/polyfill.min.js"></script>
   <script src="logic.js"></script>
   <script src="app.js"></script>
 </body>

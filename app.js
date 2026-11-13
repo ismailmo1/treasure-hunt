@@ -11,8 +11,7 @@
   // phase: "welcome" (stage 0 only) | "clue" | "revealed" (stage scanned; the next stage's location is shown)
   var state = { stage: 0, phase: "welcome" };
   var countdownTimer = null;
-  var scanner = null;
-  var scannerRunning = false;
+  var scanner = null; // { stop() } for the running camera + decode loop
   var audioCtx = null;
   var geoWatchId = null;
   var geoSlowTimer = null;
@@ -101,10 +100,8 @@
   function stopScanner() {
     var s = scanner;
     scanner = null;
-    if (!s) return Promise.resolve();
-    var stopped = scannerRunning ? s.stop() : Promise.resolve();
-    scannerRunning = false;
-    return stopped.then(function () { s.clear(); }).catch(function () { /* already stopped */ });
+    if (s) s.stop();
+    return Promise.resolve();
   }
 
   // Builds the camera view + typed-entry fallback. onCode(code) must return true
@@ -174,35 +171,73 @@
     });
 
     function start() {
-      if (!window.Html5Qrcode) {
-        setIdle("Scanner couldn't load. Check your connection, or type the number below.", false);
+      if (!window.BarcodeDetector || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setIdle(window.isSecureContext
+          ? "Scanner couldn't load. Check your connection, or type the number below."
+          : "The camera needs an https:// address. Type the number below instead.", false);
         manual.open = true;
         return;
       }
-      var F = window.Html5QrcodeSupportedFormats;
-      scanner = new window.Html5Qrcode("reader", {
-        formatsToSupport: [F.EAN_13, F.EAN_8, F.UPC_A, F.UPC_E, F.CODE_128, F.QR_CODE],
-        verbose: false
+      // Native detector on Android Chrome, ZXing-C++ WebAssembly (via the polyfill) everywhere else.
+      var detector = new window.BarcodeDetector({
+        formats: ["ean_13", "ean_8", "upc_a", "upc_e", "code_128", "qr_code"]
       });
-      var mine = scanner;
-      mine.start(
-        { facingMode: "environment" },
-        {
-          fps: 10,
-          qrbox: function (w, h) {
-            return { width: Math.floor(w * 0.85), height: Math.floor(Math.min(h * 0.6, w * 0.5)) };
-          }
-        },
-        handle,
-        function () { /* no barcode in this frame */ }
-      ).then(function () {
-        if (scanner !== mine) { // user left the screen while the camera was starting
-          mine.stop().then(function () { mine.clear(); }).catch(function () { });
+      var video = el("video", { playsinline: "", muted: "", autoplay: "" });
+      video.muted = true; // iOS only autoplays inline video that is muted
+      var readerEl = wrap.querySelector("#reader");
+      var stream = null;
+      var stopped = false;
+      var timer = null;
+      var busy = false;
+
+      var mine = {
+        stop: function () {
+          stopped = true;
+          clearTimeout(timer);
+          if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+          video.srcObject = null;
+          if (video.parentNode) video.parentNode.removeChild(video);
+        }
+      };
+      scanner = mine;
+
+      function tick() {
+        if (stopped) return;
+        timer = setTimeout(tick, 80); // ~12 attempts a second; decoding takes longer than this on slower phones
+        if (busy || video.readyState < 2) return;
+        busy = true;
+        detector.detect(video).then(function (found) {
+          if (!stopped && found.length) handle(found[0].rawValue);
+        }).catch(function () { /* no barcode in this frame */ }).then(function () { busy = false; });
+      }
+
+      navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          facingMode: { ideal: "environment" },
+          // The default stream is ~640x480, too soft for fine product barcodes.
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        }
+      }).then(function (s) {
+        if (stopped) { // user left the screen while the camera was starting
+          s.getTracks().forEach(function (t) { t.stop(); });
           return;
         }
-        scannerRunning = true;
-        setIdle("Point the camera at a barcode.", false);
+        stream = s;
+        // Not every browser supports this; ignore the ones that don't.
+        var track = s.getVideoTracks()[0];
+        if (track && track.applyConstraints) {
+          track.applyConstraints({ advanced: [{ focusMode: "continuous" }] }).catch(function () { });
+        }
+        video.srcObject = s;
+        readerEl.appendChild(video);
+        return video.play().then(function () {
+          setIdle("Point the camera at a barcode.", false);
+          tick();
+        });
       }).catch(function () {
+        mine.stop();
         if (scanner === mine) scanner = null;
         setIdle(window.isSecureContext
           ? "Couldn't use the camera. Allow camera access, or type the number below."
