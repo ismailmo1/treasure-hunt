@@ -270,7 +270,10 @@
     if (state.phase === "revealed") {
       // "revealed" means this stage was scanned and the next stage's location is on show.
       if (L.afterScan(config.stages, state.stage) !== "reveal") return go(state.stage + 1, "clue");
-      return renderRevealed(config.stages[state.stage + 1]);
+      // The next stage's "unlockAt" also holds back its location, not just its clue.
+      var nextStage = config.stages[state.stage + 1];
+      if (L.msUntilUnlock(nextStage, Date.now()) > 0) return renderLocked(nextStage, "Nice find! The next location unlocks in");
+      return renderRevealed(nextStage);
     }
     if (L.msUntilUnlock(stage, Date.now()) > 0) return renderLocked(stage);
     renderClue(stage);
@@ -292,7 +295,7 @@
     ]);
   }
 
-  function renderLocked(stage) {
+  function renderLocked(stage, heading) {
     var clock = el("p", { class: "countdown" });
     function tick() {
       var ms = L.msUntilUnlock(stage, Date.now());
@@ -302,7 +305,7 @@
     show([
       el("div", { class: "card center" }, [
         el("p", { class: "eyebrow", text: "Locked" }),
-        el("p", { class: "big", text: "The next clue unlocks in" }),
+        el("p", { class: "big", text: heading || "The next clue unlocks in" }),
         clock,
         el("p", { class: "muted", text: "Opens " + new Date(stage.unlockAt).toLocaleString([], { dateStyle: "full", timeStyle: "short" }) })
       ])

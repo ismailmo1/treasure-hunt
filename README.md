@@ -36,7 +36,7 @@ where the hunt ends, so it needs a `location` and nothing else. Every entry befo
 | `clue` | yes, except on the last entry | The prompt shown to the player at this place. |
 | `detail` | no | Extra hint shown under the clue on the clue page (hidden on the scan page). |
 | `barcodes` | yes, except on the last entry | What has to be scanned at this place, as text in quotes. A scan counts as correct if it **starts with** any entry, so a full barcode (8, 12, 13 or 14 digits) matches only that item, while a shorter entry (the maker's company prefix, e.g. `5000159` for Mars) matches everything that maker sells. M&S barcodes are 8 digits with no maker prefix, so list them in full. Use a prefix to avoid listing every size/flavour; use full codes where a prefix would be too broad. An entry can also be `{ "code": "…", "note": "Coke 500ml" }`; the note is only a reminder for you. Run `node verify-barcodes.mjs` to look full codes up on Open Food Facts. |
-| `unlockAt` | no | The clue stays locked, with a countdown, until this date-time (phone's local time). |
+| `unlockAt` | no | The stage stays locked, with a countdown, until this date-time (phone's local time): neither its location nor its clue is shown before then. |
 | `location` | yes | Where this place is: `name`, `lat`, `lng`, and an optional `radius` in metres. It's revealed after the *previous* place's scan. For somewhere the player already is, or that you'd rather not publish (like home), use `{ "name": "Home", "current": true }` instead: no coordinates, and the reveal screen before this place is skipped (except for the last entry, which is always revealed). |
 
 At least two entries are needed: where the hunt starts and where it ends. After the scan at the
