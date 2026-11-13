@@ -49,8 +49,9 @@
         errors.push(label + "\"barcodes\" must list at least one barcode.");
       } else if (needsScan) {
         s.barcodes.forEach(function (b) {
-          if (!isNonEmptyString(barcodeCode(b))) {
-            errors.push(label + "each barcode must be text in quotes, e.g. \"5449000000996\", " +
+          var code = barcodeCode(b);
+          if (!isNonEmptyString(code) || !/^[0-9 ]+$/.test(code)) {
+            errors.push(label + "each barcode must be digits as text in quotes, e.g. \"5449000000996\", " +
               "or {\"code\": \"5449000000996\", \"note\": \"Coke 500ml\"}.");
           }
         });
@@ -88,10 +89,21 @@
     return String(code).replace(/\s+/g, "").replace(/^0+/, "");
   }
 
+  // Entries of 8, 12, 13 or 14 digits are full barcodes and must match the scan exactly (after normalising).
+  // Anything shorter is a prefix, typically a maker's company prefix, and matches every scan starting with it.
+  function isFullBarcode(code) {
+    return /^\d{8}$|^\d{12,14}$/.test(String(code).replace(/\s+/g, ""));
+  }
+
   function barcodeMatches(scanned, accepted) {
     var n = normaliseBarcode(scanned);
     if (!n) return false;
-    return accepted.some(function (b) { return normaliseBarcode(barcodeCode(b)) === n; });
+    return accepted.some(function (b) {
+      var code = barcodeCode(b);
+      var entry = normaliseBarcode(code);
+      if (entry === "") return false;
+      return isFullBarcode(code) ? n === entry : n.indexOf(entry) === 0;
+    });
   }
 
   // Milliseconds until the stage unlocks; 0 if it has no timer or is already open.

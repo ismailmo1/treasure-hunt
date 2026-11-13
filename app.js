@@ -279,7 +279,7 @@
   function renderClue(stage) {
     show([
       el("div", { class: "card center" }, [
-        el("p", { class: "eyebrow", text: "Find and scan" }),
+        el("p", { class: "eyebrow", text: "Your next clue:" }),
         el("p", { class: "big", text: stage.clue }),
         el("p", {
           class: "muted",

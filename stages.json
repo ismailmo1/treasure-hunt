@@ -2,13 +2,24 @@
   "title": "Saj's Treasure Hunt",
   "welcome": "Follow the clues, scan the right items, and find your way to the treasure.",
   "finishMessage": "Congratulations, you made it! The hunt is over.",
-  "overridePassword": "changeme",
+  "overridePassword": "dontruinit",
   "stages": [
     {
       "clue": "some snacks for movie night",
-      "detail": "grab some snacks and scan what you think is my favourite",
+      "detail": "lets go grab some snacks, im feeling something savoury...",
       "barcodes": [
-        "1111"
+        {
+          "code": "5000328428581",
+          "note": "Walkers Sensations Poppadoms Lime & Coriander Chutney 82.5g"
+        },
+        {
+          "code": "5000328806181",
+          "note": "Walkers Sensations Poppadoms Mango & Chilli Chutney 82.5g"
+        },
+        {
+          "code": "5000328",
+          "note": "Walkers Sensations backup"
+        }
       ],
       "unlockAt": "2026-11-13T16:00:00",
       "location": {
@@ -17,10 +28,65 @@
       }
     },
     {
-      "clue": "TODO: clue for stage 2",
-      "detail": "TODO: extra detail for stage 2",
+      "clue": "something to keep me awake!",
+      "detail": "my favourite way to power through a long (or short??) drive to continue tomorrow's hunt 👀",
       "barcodes": [
-        "1111"
+        {
+          "code": "5056784",
+          "note": "any Monster product from this maker prefix (4 known)"
+        },
+        {
+          "code": "5060335",
+          "note": "any Monster product from this maker prefix (3 known)"
+        },
+        {
+          "code": "5060337",
+          "note": "any Monster product from this maker prefix (6 known)"
+        },
+        {
+          "code": "5060517",
+          "note": "any Monster product from this maker prefix (8 known)"
+        },
+        {
+          "code": "5060639",
+          "note": "any Monster product from this maker prefix (16 known)"
+        },
+        {
+          "code": "5060751",
+          "note": "any Monster product from this maker prefix (7 known)"
+        },
+        {
+          "code": "5060896",
+          "note": "any Monster product from this maker prefix (17 known)"
+        },
+        {
+          "code": "5060947",
+          "note": "any Monster product from this maker prefix (15 known)"
+        },
+        {
+          "code": "5061013",
+          "note": "any Monster product from this maker prefix (5 known)"
+        },
+        {
+          "code": "4062139016235",
+          "note": "Monster Blueberry Zero Sugar"
+        },
+        {
+          "code": "5056364900093",
+          "note": "Monster Orange Dreamsicle"
+        },
+        {
+          "code": "5060296681326",
+          "note": "Monster zéro Watermelon"
+        },
+        {
+          "code": "5099238890076",
+          "note": "Monster Energy Zero Sugar"
+        },
+        {
+          "code": "8064545632777",
+          "note": "Monster The Doctor"
+        }
       ],
       "unlockAt": "2026-11-13T21:00:00",
       "location": {
@@ -29,43 +95,23 @@
       }
     },
     {
-      "clue": "something to keep me awake!",
-      "detail": "my favourite way to power through a long drive, especially when i've refused to sleep the night before (im watching my figure btw)",
+      "clue": "the grenade I actually want to be holding",
+      "detail": "no pin to pull, no bang - but it comes in clutch when ive got the 🐔 ick",
       "barcodes": [
         {
-          "code": "5060896623276",
-          "note": "Monster Energy Ultra (probably the white can)"
+          "code": "5060221",
+          "note": "any Grenade product from this maker prefix (9 known)"
         },
         {
-          "code": "5060896623368",
-          "note": "Monster Energy 500ml"
+          "code": "5060811",
+          "note": "any Grenade product from this maker prefix (22 known)"
         },
         {
-          "code": "5060947545724",
-          "note": "Monster Ultra Zero Sugar 500ml"
-        },
-        {
-          "code": "5060639122899",
-          "note": "Monster Pacific Punch 500ml"
-        },
-        {
-          "code": "5060896623214",
-          "note": "Monster Mango Loco 500ml"
-        },
-        {
-          "code": "5060896623894",
-          "note": "Monster Ultra Gold 500ml"
-        },
-        {
-          "code": "5060947549074",
-          "note": "Monster Zero Sugar (green)"
-        },
-        {
-          "code": "5060751213383",
-          "note": "Monster Monarch 500ml"
+          "code": "5060810389325",
+          "note": "Grenade Choc Chip Salted Caramel 35g"
         }
       ],
-      "unlockAt": "2026-01-01T00:00:00",
+      "unlockAt": "2026-11-14T08:00:00",
       "location": {
         "name": "Coventry Arena",
         "lat": 52.44768,
@@ -73,24 +119,16 @@
       }
     },
     {
-      "clue": "TODO: clue for stage 4",
-      "detail": "TODO: extra detail for stage 4",
+      "clue": "bite off the end and use me like a straw in your tea",
+      "detail": "team left or right?",
       "barcodes": [
         {
-          "code": "5000159559485",
-          "note": "Twix 50g"
+          "code": "5000159",
+          "note": "any Twix product from this maker prefix (34 known)"
         },
         {
-          "code": "5000159459228",
-          "note": "Twix Twin 50g"
-        },
-        {
-          "code": "5000159557733",
-          "note": "Twix 160g multipack"
-        },
-        {
-          "code": "5000159557658",
-          "note": "Twix 4 pcs"
+          "code": "5056357908044",
+          "note": "TWIX GLUTEN FREE 4 INDIVIDUALLY WRAPPED Chocolate (4 x 30 g)"
         }
       ],
       "unlockAt": "2026-01-01T00:00:00",
@@ -101,28 +139,12 @@
       }
     },
     {
-      "clue": "TODO: clue for stage 5",
-      "detail": "TODO: extra detail for stage 5",
+      "clue": "mmm go on then, ill have a cuppa",
+      "detail": "aka bin juice, aka the drink i dont know how to make my own, aka no teaspoon crew",
       "barcodes": [
         {
-          "code": "5000208099351",
-          "note": "Tetley Original 120 tea bags"
-        },
-        {
-          "code": "5000208069897",
-          "note": "Tetley Original 240 tea bags"
-        },
-        {
-          "code": "5000208096480",
-          "note": "Tetley Original 375g"
-        },
-        {
-          "code": "5000208044450",
-          "note": "Tetley tea bags (generic entry)"
-        },
-        {
-          "code": "5000208002450",
-          "note": "Tetley Decaf 80 tea bags"
+          "code": "5000208",
+          "note": "any Tetley product from this maker prefix (37 known)"
         }
       ],
       "unlockAt": "2026-01-01T00:00:00",
@@ -133,10 +155,177 @@
       }
     },
     {
-      "clue": "TODO: clue for stage 6",
-      "detail": "TODO: extra detail for stage 6",
+      "clue": "fix your face",
+      "detail": "you havent moisturised today have you?",
       "barcodes": [
-        "1111"
+        {
+          "code": "88864670",
+          "note": "dove backup"
+        },
+        {
+          "code": "6281006409644",
+          "note": "dove cream (250ml) (unverified)"
+        },
+        {
+          "code": "8886467049514",
+          "note": "DOVE Beauty cream (unverified)"
+        },
+        {
+          "code": "8886467010415",
+          "note": "Dove Original moisturing cream (50ml) (unverified)"
+        },
+        {
+          "code": "0859581006747",
+          "note": "Dove Beauty cream (1) (unverified)"
+        },
+        {
+          "code": "8710908500404",
+          "note": "Dove Go Fresh moisturising cream (unverified)"
+        },
+        {
+          "code": "8886467020124",
+          "note": "Dove Nourishing body cream (unverified)"
+        },
+        {
+          "code": "8886467020155",
+          "note": "Dove Body cream (unverified)"
+        },
+        {
+          "code": "8720181172120",
+          "note": "Dove One cream (unverified)"
+        },
+        {
+          "code": "8720181172144",
+          "note": "Dove Body Love Light Hydration One Cream (unverified)"
+        },
+        {
+          "code": "8717163972717",
+          "note": "Dove Body love rich nourishment cream (unverified)"
+        },
+        {
+          "code": "8717163476789",
+          "note": "Dove Body Love Bodycrème Rich Nourishment 150 ml (unverified)"
+        },
+        {
+          "code": "8710447173978",
+          "note": "Dove Crème Corps Pot Colombes x1 (75 ml) (unverified)"
+        },
+        {
+          "code": "8710522361610",
+          "note": "Dove Crème Corps Pot Rosace x1 (80 g) (unverified)"
+        },
+        {
+          "code": "40133218",
+          "note": "Dove DermaSpa Crème Hydratante Corps Nutri Essence Pot 300ml (300 ml) (unverified)"
+        },
+        {
+          "code": "40133249",
+          "note": "Dove DermaSpa Crème Hydratante Corps Richesse Cachemire Pot 300ml (300 ml) (unverified)"
+        },
+        {
+          "code": "40883007",
+          "note": "DOVE Crème Hydratante Corps Soie Pot 300ml (300 ml) (unverified)"
+        },
+        {
+          "code": "60028006",
+          "note": "Dove even tone moisturising cream (1) (unverified)"
+        },
+        {
+          "code": "0011111030589",
+          "note": "Dove body love Hand Cream Intense Care (88.5 mL) (unverified)"
+        },
+        {
+          "code": "8710447275313",
+          "note": "Dove hand cream (75ml) (unverified)"
+        },
+        {
+          "code": "8710847963469",
+          "note": "Dove Body Love Essential Care Handcrème (75ml) (unverified)"
+        },
+        {
+          "code": "8710908778230",
+          "note": "Dove Restoring ritual body lotion (400ml) (unverified)"
+        },
+        {
+          "code": "8710447340691",
+          "note": "Dove Body love medium to dark (unverified)"
+        },
+        {
+          "code": "8710447495704",
+          "note": "Dove body lotion (400ml) (unverified)"
+        },
+        {
+          "code": "8710447310601",
+          "note": "Dove body lotion (400ml) (unverified)"
+        },
+        {
+          "code": "8710447495643",
+          "note": "Dove Awakening ritual body lotion (400ml) (unverified)"
+        },
+        {
+          "code": "8711600453975",
+          "note": "Dove Intense care bodylotion (400 ml) (unverified)"
+        },
+        {
+          "code": "8711600456877",
+          "note": "Dove essential care body lotion (unverified)"
+        },
+        {
+          "code": "8720181158872",
+          "note": "Dove Body Love Care + Radiant Glow Bodylotion (400ml) (unverified)"
+        },
+        {
+          "code": "4000388563902",
+          "note": "Dove Body Love Light Care Bodylotion (400ml) (unverified)"
+        },
+        {
+          "code": "8717163673072",
+          "note": "Dove Sensitive Body Lotion (250 ml) (unverified)"
+        },
+        {
+          "code": "8720181022548",
+          "note": "Dove body lotion (250ml) (unverified)"
+        },
+        {
+          "code": "8720181380006",
+          "note": "Dove Body Lotion (400ml) (unverified)"
+        },
+        {
+          "code": "8712561008273",
+          "note": "Dove Body Lotion (1pcs) (unverified)"
+        },
+        {
+          "code": "8711700963503",
+          "note": "Dove Body Lotion Hydro Pflege (400 ml) (unverified)"
+        },
+        {
+          "code": "8710447362945",
+          "note": "Dove Sensitive Skin Care Lotion (400 ml) (unverified)"
+        },
+        {
+          "code": "6281006409880",
+          "note": "Dove Invigorating body lotion (400 ml) (unverified)"
+        },
+        {
+          "code": "8720181085659",
+          "note": "Dove Body Love (400 ml) (unverified)"
+        },
+        {
+          "code": "8710447362938",
+          "note": "baby dove lotion (unverified)"
+        },
+        {
+          "code": "4000388563803",
+          "note": "Dove Nourishing Body Care Essential Rich Body Lotion for Dry Skin (unverified)"
+        },
+        {
+          "code": "8720181085710",
+          "note": "Dove Kokos Lotion (1pcs) (unverified)"
+        },
+        {
+          "code": "7506306231832",
+          "note": "Dove Body Love Intensiva (1l) (unverified)"
+        }
       ],
       "unlockAt": "2026-01-01T00:00:00",
       "location": {
@@ -146,10 +335,193 @@
       }
     },
     {
-      "clue": "TODO: clue for stage 7",
-      "detail": "TODO: extra detail for stage 7",
+      "clue": "oink oink",
+      "detail": "i think we're going to need some sugar to get through the rest of this",
       "barcodes": [
-        "1111"
+        {
+          "code": "0004976000088",
+          "note": "M&S Percy Pig 1/3 Less Sugar"
+        },
+        {
+          "code": "00062589",
+          "note": "M&S Percy pig"
+        },
+        {
+          "code": "00117692",
+          "note": "M&S Percy pig"
+        },
+        {
+          "code": "00132305",
+          "note": "M&S Percy pig"
+        },
+        {
+          "code": "00132589",
+          "note": "M&S Percy Pig soft fruit flavour gums made with fruit juice (170g)"
+        },
+        {
+          "code": "00197915",
+          "note": "M&S Percy Pig"
+        },
+        {
+          "code": "00390194",
+          "note": "M&S Percy piglets (170 g)"
+        },
+        {
+          "code": "00497398",
+          "note": "M&S Percy pigs"
+        },
+        {
+          "code": "00497688",
+          "note": "M&S Percy Pig Sugar Reduced (150 g)"
+        },
+        {
+          "code": "00749046",
+          "note": "M&S Percy pig (170 g)"
+        },
+        {
+          "code": "00749060",
+          "note": "M&S percy pig and family (170 g)"
+        },
+        {
+          "code": "00787345",
+          "note": "M&S Veggie Percy (170 g)"
+        },
+        {
+          "code": "00958349",
+          "note": "M&S Percy Pig soft fruit flavour gums"
+        },
+        {
+          "code": "00978088",
+          "note": "M&S percy pig"
+        },
+        {
+          "code": "00020039",
+          "note": "M&S Percy's family mix"
+        },
+        {
+          "code": "00221498",
+          "note": "M&S Percy's parents"
+        },
+        {
+          "code": "00687003",
+          "note": "M&S reversy percy"
+        },
+        {
+          "code": "00621137",
+          "note": "M&S Percy Pig Irish 40 year anniverasary edition"
+        },
+        {
+          "code": "00812849",
+          "note": "M&S Percy and Penny (33 g)"
+        },
+        {
+          "code": "00929103",
+          "note": "M&S Percy and Penny with special lovers strawberry hearts (170 g)"
+        },
+        {
+          "code": "29025060",
+          "note": "M&S Percy pig phizzy chews"
+        },
+        {
+          "code": "29094950",
+          "note": "M&S Percy pig"
+        },
+        {
+          "code": "29125210",
+          "note": "M&S Percy pig (210 g)"
+        },
+        {
+          "code": "29143535",
+          "note": "M&S Percy pig"
+        },
+        {
+          "code": "29149001",
+          "note": "M&S Percy pig sweetie jar"
+        },
+        {
+          "code": "29177844",
+          "note": "M&S Percy Pig"
+        },
+        {
+          "code": "29179640",
+          "note": "M&S percy pig"
+        },
+        {
+          "code": "29179664",
+          "note": "M&S Percy Pig Pennies"
+        },
+        {
+          "code": "29189045",
+          "note": "M&S percy pigs"
+        },
+        {
+          "code": "29189700",
+          "note": "M&S Percy pig sweets"
+        },
+        {
+          "code": "29194698",
+          "note": "M&S Zombie percy pig (290 g)"
+        },
+        {
+          "code": "29199921",
+          "note": "M&S Percy Pig hogs and kisses"
+        },
+        {
+          "code": "29205738",
+          "note": "M&S Percy Pig Easter Party Time"
+        },
+        {
+          "code": "29233267",
+          "note": "M&S Percy pigs"
+        },
+        {
+          "code": "29233274",
+          "note": "M&S Percy Pig"
+        },
+        {
+          "code": "29241095",
+          "note": "M&S Giant Percy Pig Thirty Piggy Pennies"
+        },
+        {
+          "code": "29248322",
+          "note": "M&S Percy pig"
+        },
+        {
+          "code": "29350247",
+          "note": "M&S Percy Pig Phizzy Pigtails"
+        },
+        {
+          "code": "29353132",
+          "note": "M&S Percy Pig Terrifying Party"
+        },
+        {
+          "code": "29386239",
+          "note": "M&S Percy Piglets"
+        },
+        {
+          "code": "29397891",
+          "note": "M&S Reverse Percy pigs"
+        },
+        {
+          "code": "29406494",
+          "note": "M&S Percy Pig naughty and nice piglets"
+        },
+        {
+          "code": "29439485",
+          "note": "M&S Percy Pigs Snouts"
+        },
+        {
+          "code": "29477449",
+          "note": "M&S Percy Pig Petrifying Party"
+        },
+        {
+          "code": "29512218",
+          "note": "M&S Percy Pig"
+        },
+        {
+          "code": "98525546",
+          "note": "M&S Percy Pigs"
+        }
       ],
       "unlockAt": "2026-01-01T00:00:00",
       "location": {
@@ -161,7 +533,7 @@
     {
       "location": {
         "name": "Novotel Hotel, Cambridge",
-        "lat": 52.2250,
+        "lat": 52.225,
         "lng": 0.1585
       }
     }

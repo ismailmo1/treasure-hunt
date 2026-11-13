@@ -52,6 +52,18 @@ assert.ok(L.validateConfig(withEnd({ clue: "c", barcodes: [{ note: "x" }], locat
 assert.ok(!L.barcodeMatches("5449000000997", ["5449000000996"]));
 assert.ok(!L.barcodeMatches("", ["5449000000996"]));
 assert.ok(!L.barcodeMatches("000", ["0"]), "all-zero input never matches");
+// entries are prefixes: a full code matches only itself, a shorter one matches that maker's other items
+assert.ok(L.barcodeMatches("5000159559485", ["5000159"]), "company prefix matches any product from it");
+assert.ok(L.barcodeMatches("5000159559485", [{ code: "5000159", note: "any Mars product" }]));
+assert.ok(!L.barcodeMatches("5000328428581", ["5000159"]), "a different maker's prefix doesn't match");
+assert.ok(L.barcodeMatches("0847534004384", ["847534"]), "leading zeros ignored on prefixes too");
+assert.ok(L.barcodeMatches("847534004384", ["0847534"]));
+assert.ok(!L.barcodeMatches("5000159559485", ["5000159559486"]), "a full code only matches itself");
+assert.ok(!L.barcodeMatches("5000159", ["5000159559485"]), "a scan shorter than the entry doesn't match");
+assert.ok(L.barcodeMatches("00062589", ["00062589"]), "8-digit codes (M&S) match exactly");
+assert.ok(!L.barcodeMatches("6258901234567", ["00062589"]), "an 8-digit code with leading zeros is not a prefix");
+assert.ok(!L.barcodeMatches("5449000000996", ["", "0"]), "empty or all-zero entries never match everything");
+assert.ok(L.validateConfig(withEnd({ clue: "c", barcodes: ["12ab"], location: { name: "x", lat: 1, lng: 1 } }))[0].includes("barcode"), "non-digit entries rejected");
 
 // timer
 const now = new Date("2026-12-01T13:00:00").getTime();
